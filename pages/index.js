@@ -6,6 +6,21 @@ import styles from '@/styles/Home.module.css'
 const inter = Inter({subsets: ['latin']})
 
 export default function Home() {
+  
+  
+  const fetchData = async () => {
+    // get the data from the API
+    const hops = fetch('/api/scrape')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data, "ca va topi")
+      })
+      .catch(error => {
+        console.error('Errorsssss:', error);
+      })
+  }
+  
+  
   return (
     <>
       <Head>
@@ -44,48 +59,18 @@ export default function Home() {
               <span className={styles.hopElement}>🟢</span>
             </td>
             <td>
-              <span className={styles.hopElement}>Lien</span>
+              <span className={styles.hopElement}><a href="#">Lien</a></span>
               <span className={styles.hopElement}>150 $</span>
               <span className={styles.hopElement}>🔴</span>
             </td>
-
+            <td>
+              {/*  add fetch data button here */}
+              <button onClick={fetchData}>Fetch data</button>
+            </td>
+          
           </tr>
           </tbody>
         </table>
-  
-        <table className={styles.styledTable}>
-          <thead>
-          <tr>
-            <th></th>
-            <th>ID</th>
-            <th>NOM</th>
-            <th>PRIX</th>
-            <th>STOCK</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>001</td>
-            <td>IPA</td>
-            <td>5.99€</td>
-            <td>En stock</td>
-          </tr>
-          <tr>
-            <td>002</td>
-            <td>Blonde</td>
-            <td>4.99€</td>
-            <td>En rupture de stock</td>
-          </tr>
-          <tr className={styles.highlighted}>
-            <td>003</td>
-            <td>Triple</td>
-            <td>8.99€</td>
-            <td>En stock</td>
-          </tr>
-          </tbody>
-        </table>
-      
-      
       </main>
     </>
   )
