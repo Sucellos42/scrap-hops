@@ -6,6 +6,9 @@ async function formatData(scrapedData) {
     return obj.status.trim().toLowerCase().includes("disponible") ? "disponible" : "rupture";
   }
   
+  biereappro(scrapedData)
+  // pinta(scrapedData)
+  
   function biereappro(obj) {
     return obj.status.trim().toLowerCase().includes("rupture") ? "rupture" : "disponible";
   }
@@ -15,25 +18,30 @@ async function formatData(scrapedData) {
   }
   
   return {
-    PINTA: {...scrapedData.PINTA, status: pinta(scrapedData.PINTA), price: removeNonNumeric(scrapedData.PINTA.price)},
-    BIEREAPPRO: {
-      ...scrapedData.BIEREAPPRO,
-      status: biereappro(scrapedData.BIEREAPPRO),
-      price: removeNonNumeric(scrapedData.BIEREAPPRO.price)
-    }
-  };
+      ...scrapedData,
+      status: pinta(scrapedData),
+      price: removeNonNumeric(scrapedData.price)
+  }
+  //   PINTA: {
+  //     ...scrapedData.PINTA,
+  //     status: pinta(scrapedData.PINTA),
+  //     price: removeNonNumeric(scrapedData.PINTA.price)},
+  //   BIEREAPPRO: {
+  //     ...scrapedData.BIEREAPPRO,
+  //     status: biereappro(scrapedData.BIEREAPPRO),
+  //     price: removeNonNumeric(scrapedData.BIEREAPPRO.price)
+  //   }
+  // };
 }
 
 
 export default async function handler(req, res) {
-  let count = 0;
   console.log(performance.now() + 'ms' + ' - ' + 'start')
   const puppeteer = require('puppeteer');
   
   async function scrapeSite(url, tags) {
     
     
-    // console.log(urlObj, "urlObj")
     // pour chaque URLS de url obj on scrap
     
     const browser = await puppeteer.launch();
@@ -50,28 +58,29 @@ export default async function handler(req, res) {
     
     await browser.close();
     const data = {price, status, url: url}
-    console.log(data, "data")
-    return {price, status, url: url};
+    const formattedData = await formatData(data)
+    console.log(formattedData)
+    return formattedData;
   }
   
   async function scrapeAllSites() {
-    const scrapedData = {};
-    const data = {};
-    // PINTA
-    for (const [key, url] of Object.entries(PINTA.URLS)) {
-      data[key] = await scrapeSite(url, PINTA.TAGS);
-      scrapedData.PINTA = data;
-    }
+    const scrapedData = {
+      PINTA: {},
+      BIEREAPPRO: {}
+    };
     
-    // BIEREAPPRO
-    for (const [key, url] of Object.entries(BIEREAPPRO.URLS)) {
-      data[key] = await scrapeSite(url, BIEREAPPRO.TAGS);
-      scrapedData.BIEREAPPRO = data;
-    }
+    await scrapeSiteUrls(PINTA.URLS, PINTA.TAGS, scrapedData.PINTA);
+    await scrapeSiteUrls(BIEREAPPRO.URLS, BIEREAPPRO.TAGS, scrapedData.BIEREAPPRO);
     
     return scrapedData;
-    // return await formatData(scrapedData);
   }
+  
+  async function scrapeSiteUrls(urls, tags, data) {
+    for (const [key, url] of Object.entries(urls)) {
+      data[key] = await scrapeSite(url, tags);
+    }
+  }
+
   
   await scrapeAllSites()
     .then(data => {
