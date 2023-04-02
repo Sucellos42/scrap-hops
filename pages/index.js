@@ -10,14 +10,12 @@ export default function Home() {
   
   const fetchData = async () => {
     // get the data from the API
-    const hops = fetch('/api/scrape')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data, "ca va topi")
-      })
-      .catch(error => {
-        console.error('Errorsssss:', error);
-      })
+    const response = await fetch('/api/hello');
+    const jsonData = await response.json();
+    console.log(jsonData)
+    const res = await fetch('/api/scrape');
+    const json = await res.json();
+    console.log(json)
   }
   
   
@@ -42,6 +40,7 @@ export default function Home() {
             <th>IDAHO</th>
             <th>MOSAIC</th>
             <th>CITRA</th>
+            
           </tr>
           </thead>
           <tbody>
