@@ -26,11 +26,13 @@ export const BIEREAPPRO = {
 
 export const ROLLINGBEERS = {
   URLS: {
-    URL_IDAHO: 'https://www.rolling-beers.fr/fr/en-pellets/3920-2224-houblon-en-pellets-idaho-7.html#/28-poids-1kg',
+    URL_IDAHO: "https://www.rolling-beers.fr/fr/en-pellets/3920-2224-houblon-en-pellets-idaho-7.html#/28-poids-1kg",
+    URL_MOSAIC: "https://www.rolling-beers.fr/fr/en-pellets/902-604-houblon-en-pellets-mosaic.html#/28-poids-1kg",
+    URL_SORACHI: "https://www.rolling-beers.fr/fr/en-pellets/1645-1045-houblon-en-pellets-sorachi-ace.html#/28-poids-1kg"
   },
   TAGS: {
-    price: 'span[itemprop=price]',
-    status: '.status_1'
+    price: "span[itemprop=price]",
+    status: "#product-availability .dispo-text p"
   }
-};
+}
 

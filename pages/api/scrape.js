@@ -1,27 +1,50 @@
-import {BIEREAPPRO, PINTA} from "@/constants/sources";
+import {BIEREAPPRO, PINTA, ROLLINGBEERS} from "@/constants/sources";
 
 
-async function formatData(scrapedData) {
+async function formatData(scrapedData, site) {
   function pinta(obj) {
-    return obj.status.trim().toLowerCase().includes("disponible") ? "disponible" : "rupture";
+    return obj.status.trim().toLowerCase().includes("disponible");
   }
   
-  biereappro(scrapedData)
-  // pinta(scrapedData)
+  function rolling(obj) {
+    return obj.status.trim().toLowerCase().includes("en stock");
+  }
   
   function biereappro(obj) {
-    return obj.status.trim().toLowerCase().includes("rupture") ? "rupture" : "disponible";
+    return !obj.status.trim().toLowerCase().includes("rupture");
   }
   
   function removeNonNumeric(str) {
     return str.replace(/[^0-9,\.]+/g, "").replace(",", ".");
   }
-  
-  return {
-      ...scrapedData,
-      status: pinta(scrapedData),
-      price: removeNonNumeric(scrapedData.price)
+  switch (site) {
+    case 'pinta':
+      return {
+        ...scrapedData,
+        status: pinta(scrapedData),
+        price: removeNonNumeric(scrapedData.price)
+      }
+    case 'rolling':
+      return {
+        ...scrapedData,
+        status: rolling(scrapedData),
+        price: removeNonNumeric(scrapedData.price)
+      }
+    case 'biereappro':
+      return {
+        ...scrapedData,
+        status: biereappro(scrapedData),
+        price: removeNonNumeric(scrapedData.price)
+      }
+    default:
+      return {
+        ...scrapedData,
+        status: false,
+        price: 0
+      }
+      
   }
+
   //   PINTA: {
   //     ...scrapedData.PINTA,
   //     status: pinta(scrapedData.PINTA),
@@ -39,9 +62,7 @@ export default async function handler(req, res) {
   console.log(performance.now() + 'ms' + ' - ' + 'start')
   const puppeteer = require('puppeteer');
   
-  async function scrapeSite(url, tags) {
-    
-    
+  async function scrapeSite(url, tags, site) {
     // pour chaque URLS de url obj on scrap
     
     const browser = await puppeteer.launch();
@@ -54,33 +75,32 @@ export default async function handler(req, res) {
     const status = await page.$eval(tags.status, el => el.textContent.trim()); // Extract status
     
     // Format price and status
-    
-    
     await browser.close();
     const data = {price, status, url: url}
-    const formattedData = await formatData(data)
-    console.log(formattedData)
+    const formattedData = await formatData(data, site)
+    console.log(formattedData, "data from scrapeSite")
     return formattedData;
   }
   
   async function scrapeAllSites() {
     const scrapedData = {
       PINTA: {},
-      BIEREAPPRO: {}
+      BIEREAPPRO: {},
+      ROLLINGBEERS: {}
     };
     
-    await scrapeSiteUrls(PINTA.URLS, PINTA.TAGS, scrapedData.PINTA);
-    await scrapeSiteUrls(BIEREAPPRO.URLS, BIEREAPPRO.TAGS, scrapedData.BIEREAPPRO);
+    await scrapeSiteUrls(PINTA.URLS, PINTA.TAGS, scrapedData.PINTA, 'pinta');
+    await scrapeSiteUrls(BIEREAPPRO.URLS, BIEREAPPRO.TAGS, scrapedData.BIEREAPPRO, 'biereappro');
+    await scrapeSiteUrls(ROLLINGBEERS.URLS, ROLLINGBEERS.TAGS, scrapedData.ROLLINGBEERS, 'rolling');
     
     return scrapedData;
   }
   
-  async function scrapeSiteUrls(urls, tags, data) {
+  async function scrapeSiteUrls(urls, tags, data, site) {
     for (const [key, url] of Object.entries(urls)) {
-      data[key] = await scrapeSite(url, tags);
+      data[key] = await scrapeSite(url, tags, site);
     }
   }
-
   
   await scrapeAllSites()
     .then(data => {
@@ -92,7 +112,5 @@ export default async function handler(req, res) {
       res.status(500).json({error: err})
     });
   console.log(performance.now() + 'ms' + ' - ' + 'end')
-  
-  
 }
 
