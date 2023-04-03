@@ -1,4 +1,4 @@
-import {BIEREAPPRO, PINTA, ROLLINGBEERS} from "@/constants/sources";
+import {BIEREAPPRO, JEREMY, PINTA, ROLLINGBEERS} from "@/constants/sources";
 
 
 async function formatData(scrapedData, site) {
@@ -44,17 +44,6 @@ async function formatData(scrapedData, site) {
       }
       
   }
-
-  //   PINTA: {
-  //     ...scrapedData.PINTA,
-  //     status: pinta(scrapedData.PINTA),
-  //     price: removeNonNumeric(scrapedData.PINTA.price)},
-  //   BIEREAPPRO: {
-  //     ...scrapedData.BIEREAPPRO,
-  //     status: biereappro(scrapedData.BIEREAPPRO),
-  //     price: removeNonNumeric(scrapedData.BIEREAPPRO.price)
-  //   }
-  // };
 }
 
 
@@ -64,7 +53,9 @@ export default async function handler(req, res) {
   
   async function scrapeSite(url, tags, site) {
     // pour chaque URLS de url obj on scrap
-    
+    if (url.length < 1) {
+      return {}
+    }
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url); // Change URL based on the object passed in
@@ -78,7 +69,6 @@ export default async function handler(req, res) {
     await browser.close();
     const data = {price, status, url: url}
     const formattedData = await formatData(data, site)
-    console.log(formattedData, "data from scrapeSite")
     return formattedData;
   }
   
@@ -86,12 +76,14 @@ export default async function handler(req, res) {
     const scrapedData = {
       PINTA: {},
       BIEREAPPRO: {},
-      ROLLINGBEERS: {}
+      ROLLINGBEERS: {},
+      JEREMY: {}
     };
     
-    await scrapeSiteUrls(PINTA.URLS, PINTA.TAGS, scrapedData.PINTA, 'pinta');
+    // await scrapeSiteUrls(PINTA.URLS, PINTA.TAGS, scrapedData.PINTA, 'pinta');
     await scrapeSiteUrls(BIEREAPPRO.URLS, BIEREAPPRO.TAGS, scrapedData.BIEREAPPRO, 'biereappro');
-    await scrapeSiteUrls(ROLLINGBEERS.URLS, ROLLINGBEERS.TAGS, scrapedData.ROLLINGBEERS, 'rolling');
+    await scrapeSiteUrls(JEREMY.URLS, BIEREAPPRO.TAGS, scrapedData.JEREMY, 'jeremy');
+    // await scrapeSiteUrls(ROLLINGBEERS.URLS, ROLLINGBEERS.TAGS, scrapedData.ROLLINGBEERS, 'rolling');
     
     return scrapedData;
   }
@@ -113,4 +105,6 @@ export default async function handler(req, res) {
     });
   console.log(performance.now() + 'ms' + ' - ' + 'end')
 }
+
+
 

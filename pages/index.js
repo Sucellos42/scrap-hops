@@ -1,10 +1,13 @@
 import styles from '@/styles/Home.module.css'
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import Head from 'next/head'
+import Cell from "@/components/cell";
+import {Tbody} from "@/components/Tbody";
 
 export default function Home() {
   const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [hopNames, setHopNames] = useState([])
   
   const fetchData = async () => {
     setIsLoading(true)
@@ -12,16 +15,25 @@ export default function Home() {
       const response = await fetch('/api/scrape')
       const hops = await response.json()
       setData(hops.data)
-      console.log(hops.data)
+      // Si data est fetch on récupère les noms des houblons
+      console.log(hops.data, "hops.data")
     } catch (error) {
       console.error(error)
     }
     setIsLoading(false)
   }
   
-  const getStatusIcon = (status) => {
-    return status === true ? '🟢' : '🔴'
+  const getHopNames = () => {
+    const hopNames = Object.keys(data[Object.keys(data)[1]])
+    setHopNames(hopNames)
+    console.log(hopNames, "hopNames")
   }
+  
+  useEffect(() => {
+    if (Object.keys(data).length > 0) {
+      getHopNames()
+    }
+  }, [data])
   
   return (
     <>
@@ -33,7 +45,7 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Table de houblon</h1>
-        <button onClick={fetchData} disabled={isLoading}>
+        <button onClick={fetchData} disabled={isLoading} className={styles.fetchButton}>
           {isLoading ? 'Chargement...' : 'Récupérer les données'}
         </button>
         {Object.keys(data).length > 0 && (
@@ -41,75 +53,27 @@ export default function Home() {
             <thead>
             <tr>
               <th></th>
-              <th>IDAHO</th>
-              <th>MOSAIC</th>
-              <th>CITRA</th>
-              <th>Sorachi</th>
+              {/* Crée les noms des sites en th */}
+              {
+                Object.keys(data).map((key) => (
+                  <th key={key}>{key}</th>
+                ))
+              }
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <th>PINTA</th>
-              {/* IDAHO */}
-              <td>
-                  <span className={styles.hopElement}>
-                    <a href={data.PINTA.URL_IDAHO.url}>Lien</a>
-                  </span>
-                <span className={styles.hopElement}>{data.PINTA.URL_IDAHO.price}€</span>
-                <span className={styles.hopElement}>{getStatusIcon(data.PINTA.URL_IDAHO.status)}</span>
-              </td>
-              {/* MOSAIC */}
-              <td>
-                  <span className={styles.hopElement}>
-                    <a href={data.PINTA.URL_MOSAIC.url}>Lien</a>
-                  </span>
-                <span className={styles.hopElement}>{data.PINTA.URL_MOSAIC.price}€</span>
-                <span className={styles.hopElement}>{getStatusIcon(data.PINTA.URL_MOSAIC.status)}</span>
-              </td>
-              {/* CITRA */}
-              <td>
-              </td>
-              {/* SORACHI */}
-              <td>
-                <span className={styles.hopElement}>
-                  <a href={data.PINTA.URL_SORACHI.url}>Lien</a>
-                </span>
-                <span className={styles.hopElement}>{data.PINTA.URL_SORACHI.price}€</span>
-                <span className={styles.hopElement}>{getStatusIcon(data.PINTA.URL_SORACHI.status)}</span>
-              </td>
-            </tr>
-            <tr>
-              <th>BIEREAPPRO</th>
-              {/* IDAHO */}
-              <td>
-                <span className={styles.hopElement}>
-                  <a href={data.BIEREAPPRO.URL_IDAHO.url}>Lien</a>
-                </span>
-                <span className={styles.hopElement}>{data.BIEREAPPRO.URL_IDAHO.price}€</span>
-                <span className={styles.hopElement}>{getStatusIcon(data.BIEREAPPRO.URL_IDAHO.status)}</span>
-              </td>
-              {/* MOSAIC */}
-              <td>
-                <span className={styles.hopElement}>
-                  <a href={data.BIEREAPPRO.URL_MOSAIC.url}>Lien</a>
-                </span>
-                <span className={styles.hopElement}>{data.BIEREAPPRO.URL_MOSAIC.price}€</span>
-                <span className={styles.hopElement}>{getStatusIcon(data.BIEREAPPRO.URL_MOSAIC.status)}</span>
-              </td>
-              {/* CITRA */}
-              <td>
-                <span className={styles.hopElement}>
-                  <a href={data.BIEREAPPRO.URL_CITRA.url}>Lien</a>
-                </span>
-                <span className={styles.hopElement}>{data.BIEREAPPRO.URL_CITRA.price}€</span>
-                <span className={styles.hopElement}>{getStatusIcon(data.BIEREAPPRO.URL_CITRA.status)}</span>
-              </td>
-              {/* SORACHI */}
-              <td>
-              </td>
-            </tr>
-            
-          </tbody>
+             {/*Crée les noms des houblons en td*/}
+              {hopNames.map((hopName) => (
+                <tr key={hopName}>
+                  <td>{hopName}</td>
+                  {/*Crée les données des houblons en td*/}
+                  
+                  
+                  
+                  
+                </tr>
+              ))}
+            </tbody>
           </table>
         )}
       </main>

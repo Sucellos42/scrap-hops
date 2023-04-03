@@ -83,6 +83,14 @@
     color: #ffffff;
 }
 
+.fetchButton {
+    background: rgba(var(--card-rgb), 0);
+    color: rgba(var(--tile-border), 0.3);
+    padding: 15px;
+    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
 
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
