@@ -61,15 +61,15 @@ export const BROUWLAND = {
 
 export const TOUTPOURBRASSER = {
   URLS: {
-    // IDAHO: "https://www.toutpourbrasser.com/houblons-en-pellets-idaho7-kg-xml-406_245-2048.html",
+    IDAHO: "https://www.toutpourbrasser.com/houblons-en-pellets-idaho7-kg-xml-406_245-2048.html",
     MOSAIC: "",
-    IDAHO: "",
+    // IDAHO: "",
     CITRA: "",
     SORACHI: ""
   },
   TAGS: {
-    price: ".PrixPromo",
-    status: ".fa_stock_refill"
+    price: ".mod_fa_prix_texte",
+    status: ".fa_stock"
   }
 }
 
@@ -82,7 +82,7 @@ export const POLSINELLI = {
   },
   TAGS: {
     price: ".prodotto__prezzo--finale",
-    status: "prodottoDisponibile"
+    status: "#prodottoDisponibile"
   }
 }
 

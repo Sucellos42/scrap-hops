@@ -4,6 +4,7 @@
     align-items: center;
     padding: 6rem;
     min-height: 100vh;
+    overflow: auto;
 }
 
 .table {
@@ -68,6 +69,7 @@
 
 .styled-table tbody tr {
     border-bottom: 1px solid #dddddd;
+    margin: 5px;
 }
 
 .styled-table tbody tr:nth-of-type(even) {
