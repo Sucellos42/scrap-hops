@@ -38,7 +38,7 @@ export const ROLLINGBEERS = {
     IDAHO: "",
     MOSAIC: "",
     SORACHI: "",
-    CITRA: ""
+    CITRA: "",
   },
   TAGS: {
     price: "span[itemprop=price]",
@@ -90,7 +90,7 @@ export const POLSINELLI = {
 
 
 
-export const sites = {
+export const SITES = {
   PINTA,
   BIEREAPPRO,
   ROLLINGBEERS,
@@ -98,5 +98,4 @@ export const sites = {
   TOUTPOURBRASSER,
   POLSINELLI,
   // TODO: ajouter-ici pour ajouter un site
-  
 }
