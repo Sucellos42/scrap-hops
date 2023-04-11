@@ -15,11 +15,17 @@ export default function Cell({ hopData }) {
         <p>Non récupéré</p>
       ) : (
         <>
-          <span className={styles.hopElement}>
-            <a href={hopData.url}>Lien</a>
-          </span>
-          <span className={styles.hopElement}>{hopData.price}€</span>
-          <span className={styles.hopElement}>{getStatusIcon(hopData.status)}</span>
+          {hopData.url === "" ? (
+            <span>🔴</span>
+            ) : (
+              <>
+                <span className={styles.hopElement}>
+                  <a href={hopData.url}>Lien</a>
+                </span>
+                <span className={styles.hopElement}>{hopData.price}€</span>
+                <span className={styles.hopElement}>{getStatusIcon(hopData.status)}</span>
+              </>
+            )}
         </>
         )}
     </td>

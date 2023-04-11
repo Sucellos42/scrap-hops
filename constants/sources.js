@@ -75,7 +75,8 @@ export const TOUTPOURBRASSER = {
 
 export const POLSINELLI = {
   URLS: {
-    SORACHI: "https://www.polsinelli.it/fr/houblon-sorachi-ace-1-kg-P1729.htm",
+    // SORACHI: "https://www.polsinelli.it/fr/houblon-sorachi-ace-1-kg-P1729.htm",
+    SORACHI: "",
     MOSAIC: "",
     IDAHO: "",
     CITRA: "https://www.polsinelli.it/fr/houblon-citra-1-kg-P2836.htm"
@@ -90,7 +91,7 @@ export const POLSINELLI = {
 
 
 
-export const SITES = {
+const SOURCES = {
   PINTA,
   BIEREAPPRO,
   ROLLINGBEERS,
@@ -99,3 +100,5 @@ export const SITES = {
   POLSINELLI,
   // TODO: ajouter-ici pour ajouter un site
 }
+
+export default SOURCES;
